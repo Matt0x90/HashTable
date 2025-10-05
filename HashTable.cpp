@@ -612,16 +612,25 @@ int main(int argc, char* argv[]) {
                 cout << "File path can't be empty, defaulting to eBid_Monthly_Sales.csv\n";
                 csvPath = "eBid_Monthly_Sales.csv";
             }
-			ifstream test(csvPath);
+        	/*ifstream test(csvPath);
 			if (!test) {
 				cout << "File not found, defaulting to eBid_Monthly_Sales.csv\n";
 				csvPath = "eBid_Monthly_Sales.csv";
-			}
+			}*/
+            // instead of opening another stream, can just use try/catch
 
             // Initialize a timer variable before loading bids
             ticks = clock();
             // Complete the method call to load the bids
-            loadBids(csvPath, bidTable);
+            //loadBids(csvPath, bidTable);
+            try {
+                loadBids(csvPath, bidTable);
+            }
+            catch (const csv::Error& e) {
+                cout << "Failed to load " << csvPath
+                    << ", defaulting to eBid_Monthly_Sales.csv\n";
+                loadBids("eBid_Monthly_Sales.csv", bidTable);
+            }
             // Calculate elapsed time and display result
             ticks = clock() - ticks; // current clock ticks minus starting clock ticks
             cout << "time: " << ticks << " clock ticks" << endl;
